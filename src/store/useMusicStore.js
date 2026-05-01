@@ -19,10 +19,16 @@ export const useMusicStore = create(
         src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
       },
       isPlayerOpen: false,
+      isPlaying: false,
+      userName: 'Gamer',
+      userAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=250&auto=format&fit=crop',
       
       togglePlayer: () => set({ isPlayerOpen: !get().isPlayerOpen }),
       setPlayerOpen: (isOpen) => set({ isPlayerOpen: isOpen }),
       setCurrentSong: (song) => set({ currentSong: song }),
+      setIsPlaying: (val) => set({ isPlaying: val }),
+      setUserName: (name) => set({ userName: name }),
+      setUserAvatar: (url) => set({ userAvatar: url }),
       toggleLike: (song) => {
         const { likedSongs } = get();
         const exists = likedSongs.find(s => s.id === song.id);
