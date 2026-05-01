@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Play, Pause, Heart, SkipForward } from 'lucide-react';
 import { useMusicStore } from '../store/useMusicStore';
+import { adManager } from '../utils/adManager';
 import './BottomPlayer.css';
 
 export default function BottomPlayer() {
@@ -44,7 +45,7 @@ export default function BottomPlayer() {
 
     if (isLeftSwipe) {
       console.log('Swiped Left - Next Song');
-      // Call next song logic here
+      adManager.logSongChange();
       alert("Next Song (Swiped Left < )");
     }
     if (isRightSwipe) {

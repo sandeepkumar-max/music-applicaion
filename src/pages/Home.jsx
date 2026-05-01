@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import { useMusicStore } from '../store/useMusicStore';
+import NativeAd from '../components/NativeAd';
 import '../App.css';
 
 export default function Home() {
@@ -85,6 +86,10 @@ export default function Home() {
             No recent history. Play a song to see it here!
           </div>
         )}
+      </div>
+
+      <div style={{ margin: '24px 0' }}>
+        <NativeAd />
       </div>
 
       {/* Made For You */}
