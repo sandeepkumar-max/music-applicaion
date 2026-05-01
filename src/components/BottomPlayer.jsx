@@ -5,20 +5,11 @@ import { adManager } from '../utils/adManager';
 import './BottomPlayer.css';
 
 export default function BottomPlayer() {
+  const { currentSong: song, setPlayerOpen } = useMusicStore();
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const audioRef = useRef(null);
   const { toggleLike, isLiked, addToHistory } = useMusicStore();
-
-  const song = {
-    id: "song-1", // added ID
-    title: "Neon Nights",
-    artist: "Synthwave Journey",
-    album: "Midnight Drive",
-    artwork: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=150&auto=format&fit=crop",
-    // Royalty free audio url for testing
-    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-  };
 
   const songIsLiked = isLiked(song.id);
 
@@ -132,21 +123,24 @@ export default function BottomPlayer() {
       // Prevent toggling play when clicking specific buttons
       if(e.target.closest('button')) return;
       togglePlay();
-    }}>
+    }}
+      onTouchStart={onTouchStart}>
       <audio 
         ref={audioRef} 
         src={song.src} 
         onEnded={() => setIsPlaying(false)}
         onTimeUpdate={handleTimeUpdate}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
       />
       
-      <div className="mini-player-left">
+      <div className="mini-player-left" onClick={() => setPlayerOpen(true)}>
         <img 
-          src={song.artwork} 
-          alt="Album Art" 
-          className="mini-playing-img"
+          src={song.artwork || song.img} 
+          alt={song.title} 
+          className="mini-player-art"
         />
-        <div className="mini-playing-info">
+        <div className="mini-player-info">
           <div className="mini-song-title">{song.title}</div>
           <div className="mini-artist-name">{song.artist}</div>
         </div>

@@ -10,8 +10,19 @@ export const useMusicStore = create(
         { id: '2', name: 'Workout', songs: [] }
       ],
       history: [],
+      currentSong: {
+        id: "song-1",
+        title: "Neon Nights",
+        artist: "Synthwave Journey",
+        album: "Midnight Drive",
+        artwork: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=500&auto=format&fit=crop",
+        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+      },
+      isPlayerOpen: false,
       
-      // Toggle Like
+      togglePlayer: () => set({ isPlayerOpen: !get().isPlayerOpen }),
+      setPlayerOpen: (isOpen) => set({ isPlayerOpen: isOpen }),
+      setCurrentSong: (song) => set({ currentSong: song }),
       toggleLike: (song) => {
         const { likedSongs } = get();
         const exists = likedSongs.find(s => s.id === song.id);

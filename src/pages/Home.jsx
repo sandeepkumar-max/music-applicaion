@@ -4,7 +4,12 @@ import NativeAd from '../components/NativeAd';
 import '../App.css';
 
 export default function Home() {
-  const { history } = useMusicStore();
+  const { history, setCurrentSong, setPlayerOpen } = useMusicStore();
+
+  const handlePlaySong = (song) => {
+    setCurrentSong(song);
+    setPlayerOpen(true);
+  };
 
   const madeForYou = [
     { id: 6, title: 'BGMI Drop Anthems', artist: 'High energy beats for Erangel', img: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=500&auto=format&fit=crop' },
@@ -59,6 +64,7 @@ export default function Home() {
           }}
             onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
             onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+            onClick={() => handlePlaySong(madeForYou[0])}
           >Play Now</button>
         </div>
       </div>
@@ -71,7 +77,7 @@ export default function Home() {
 
       <div className="horizontal-scroll">
         {history.length > 0 ? history.map((song) => (
-          <div key={song.id} className="music-card">
+          <div key={song.id} className="music-card" onClick={() => handlePlaySong(song)}>
             <div className="card-img-wrapper">
               <img src={song.artwork || song.img} alt={song.title} className="card-img" />
               <button className="card-play-btn">
@@ -100,7 +106,7 @@ export default function Home() {
 
       <div className="horizontal-scroll">
         {madeForYou.map((playlist) => (
-          <div key={playlist.id} className="music-card">
+          <div key={playlist.id} className="music-card" onClick={() => handlePlaySong(playlist)}>
             <div className="card-img-wrapper">
               <img src={playlist.img} alt={playlist.title} className="card-img" />
               <button className="card-play-btn">
