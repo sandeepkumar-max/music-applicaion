@@ -1,0 +1,87 @@
+.mini-player {
+  position: fixed;
+  bottom: calc(var(--bottom-nav-height) + 8px);
+  left: 8px;
+  right: 8px;
+  height: var(--mini-player-height);
+  background-color: var(--surface-hover);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  z-index: 90;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.mini-player-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.mini-playing-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.mini-playing-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.mini-song-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mini-artist-name {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mini-player-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: 12px;
+}
+
+.mini-control-btn {
+  color: var(--text-main);
+  transition: transform 0.1s;
+}
+
+.mini-control-btn:active {
+  transform: scale(0.9);
+}
+
+.mini-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background-color: rgba(255,255,255,0.1);
+  width: 100%;
+}
+
+.mini-progress-fill {
+  height: 100%;
+  background-color: var(--text-main);
+  width: 45%; /* Dummy progress */
+}
