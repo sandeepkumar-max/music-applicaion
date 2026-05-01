@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import {
   ChevronDown, Share2, Shuffle, SkipBack, Play, Pause,
-  SkipForward, Repeat, MessageSquare, Cast, ListMusic, Heart
+  SkipForward, Repeat, MessageSquare, Cast, ListMusic, Heart,
+  Moon, Sliders
 } from 'lucide-react';
 import { useMusicStore } from '../store/useMusicStore';
 import { adManager } from '../utils/adManager';
+import { sleepTimerManager } from '../utils/sleepTimer';
 import './NowPlaying.css';
 
 // NowPlaying is the SINGLE SOURCE OF TRUTH for audio playback.
@@ -25,7 +27,28 @@ export default function NowPlaying() {
   const [duration, setDuration] = useState(0);
   const [isShuffled, setIsShuffled] = useState(false);
   const [isLooped, setIsLooped] = useState(false);
+  const [activePanel, setActivePanel] = useState(null); // 'sleep' | 'eq' | null
+  const [sleepMinutes, setSleepMinutes] = useState(null);
+  const [eqValues, setEqValues] = useState({ bass: 50, mid: 50, treble: 50 });
   const audioRef = useRef(null);
+
+  const sleepOptions = [15, 30, 45, 60];
+
+  const activateSleep = (min) => {
+    setSleepMinutes(min);
+    sleepTimerManager.start(min);
+    setActivePanel(null);
+  };
+
+  const cancelSleep = () => {
+    setSleepMinutes(null);
+    sleepTimerManager.clear();
+  };
+
+  const handleEq = (band, val) => {
+    setEqValues(prev => ({ ...prev, [band]: val }));
+    // TODO: connect to Web Audio API BiquadFilter
+  };
 
   const song = currentSong;
   const songIsLiked = song ? isLiked(song.id) : false;
@@ -214,10 +237,68 @@ export default function NowPlaying() {
             </button>
           </div>
 
+          {/* Sleep / EQ Panels */}
+          {activePanel === 'sleep' && (
+            <div className="np-panel">
+              <div className="np-panel-title">😴 Sleep Timer</div>
+              <div className="np-panel-options">
+                {sleepOptions.map(min => (
+                  <button
+                    key={min}
+                    className={`np-option-btn ${sleepMinutes === min ? 'np-option-active' : ''}`}
+                    onClick={() => activateSleep(min)}
+                  >
+                    {min} min
+                  </button>
+                ))}
+                <button
+                  className={`np-option-btn ${!sleepMinutes ? 'np-option-active' : ''}`}
+                  onClick={cancelSleep}
+                >
+                  Off
+                </button>
+              </div>
+              {sleepMinutes && (
+                <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', textAlign: 'center', marginTop: '8px' }}>
+                  ✅ Timer set for {sleepMinutes} minutes
+                </p>
+              )}
+            </div>
+          )}
+
+          {activePanel === 'eq' && (
+            <div className="np-panel">
+              <div className="np-panel-title">🎚️ Equalizer</div>
+              {[['bass', '🔊 Bass'], ['mid', '🎵 Mid'], ['treble', '✨ Treble']].map(([band, label]) => (
+                <div key={band} className="np-eq-row">
+                  <span className="np-eq-label">{label}</span>
+                  <input
+                    type="range" min={0} max={100} value={eqValues[band]}
+                    onChange={e => handleEq(band, Number(e.target.value))}
+                    className="np-eq-slider"
+                  />
+                  <span className="np-eq-val">{eqValues[band]}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Bottom Tabs */}
           <div className="np-bottom-tabs">
-            <button className="np-tab-btn"><MessageSquare size={22} /><span>Lyrics</span></button>
-            <button className="np-tab-btn"><Cast size={22} /><span>Cast</span></button>
+            <button
+              className={`np-tab-btn ${activePanel === 'sleep' ? 'np-tab-active' : ''}`}
+              onClick={() => setActivePanel(activePanel === 'sleep' ? null : 'sleep')}
+            >
+              <Moon size={22} />
+              <span>{sleepMinutes ? `${sleepMinutes}m` : 'Sleep'}</span>
+            </button>
+            <button
+              className={`np-tab-btn ${activePanel === 'eq' ? 'np-tab-active' : ''}`}
+              onClick={() => setActivePanel(activePanel === 'eq' ? null : 'eq')}
+            >
+              <Sliders size={22} />
+              <span>EQ</span>
+            </button>
             <button className="np-tab-btn"><ListMusic size={22} /><span>Queue</span></button>
           </div>
         </div>

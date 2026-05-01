@@ -33,9 +33,17 @@ export const sleepTimer = {
       this.endTime = null;
     }
   },
+
+  clear: function() {
+    this.stop();
+    this.currentSetting = 'Off';
+  },
   
   getRemaining: function() {
     if (!this.endTime) return null;
     return Math.max(0, Math.ceil((this.endTime - Date.now()) / 60000));
   }
 };
+
+// Alias for convenience
+export const sleepTimerManager = sleepTimer;

@@ -1,10 +1,12 @@
 import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useMusicStore } from '../store/useMusicStore';
 import NativeAd from '../components/NativeAd';
 import '../App.css';
 
 export default function Home() {
-  const { history, setCurrentSong, setPlayerOpen } = useMusicStore();
+  const navigate = useNavigate();
+  const { history, setCurrentSong, setPlayerOpen, userAvatar } = useMusicStore();
 
   const handlePlaySong = (song) => {
     setCurrentSong(song);
@@ -23,8 +25,8 @@ export default function Home() {
       {/* Top Bar */}
       <div className="top-bar">
         <h1 className="app-title gradient-text">Tunefy</h1>
-        <button className="user-profile-btn">
-          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100&auto=format&fit=crop" alt="User" className="avatar" />
+        <button className="user-profile-btn" onClick={() => navigate('/profile')}>
+          <img src={userAvatar} alt="User" className="avatar" />
         </button>
       </div>
 
