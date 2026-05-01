@@ -1,5 +1,10 @@
 {
   "appId": "com.tunefy.app",
   "appName": "Tunefy",
-  "webDir": "dist"
+  "webDir": "dist",
+  "plugins": {
+    "AdMob": {
+      "appId": "ca-app-pub-3271133689051975~5812473760"
+    }
+  }
 }
