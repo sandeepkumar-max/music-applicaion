@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
 
-export default function AdBanner({ label = 'Advertisement' }) {
+export default function AdBanner() {
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
-      // On real Android app, load actual AdMob banner
       loadNativeBanner();
     }
   }, []);
@@ -16,14 +15,16 @@ export default function AdBanner({ label = 'Advertisement' }) {
         adId: 'ca-app-pub-3271133689051975/5478491338',
         adSize: BannerAdSize.BANNER,
         position: BannerAdPosition.BOTTOM_CENTER,
-        margin: 0,
+        margin: 56, // above bottom nav
       });
     } catch (e) {
-      console.error('AdMob Banner Error', e);
+      console.warn('Banner ad failed:', e);
     }
   }
 
-  // Always show a beautiful placeholder banner in browser
+  // Show beautiful gaming-themed placeholder in browser only
+  if (Capacitor.isNativePlatform()) return null; // Native handles its own banner overlay
+
   return (
     <div style={{
       width: '100%',
@@ -36,79 +37,17 @@ export default function AdBanner({ label = 'Advertisement' }) {
       margin: '12px 0',
       border: '1px solid rgba(124, 59, 237, 0.3)',
       boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
-      overflow: 'hidden',
       position: 'relative',
       minHeight: '60px',
     }}>
-      {/* Glowing side accent */}
-      <div style={{
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        bottom: 0,
-        width: '3px',
-        background: 'linear-gradient(180deg, #7c3aed, #3b82f6)',
-        borderRadius: '3px 0 0 3px'
-      }} />
-
-      {/* Ad icon */}
-      <div style={{
-        width: '42px',
-        height: '42px',
-        borderRadius: '10px',
-        background: 'linear-gradient(135deg, #7c3aed, #3b82f6)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexShrink: 0,
-        fontSize: '20px',
-        marginLeft: '8px',
-      }}>
-        🎮
-      </div>
-
-      {/* Text */}
+      <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '3px', background: 'linear-gradient(180deg, #7c3aed, #3b82f6)', borderRadius: '3px 0 0 3px' }} />
+      <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'linear-gradient(135deg, #7c3aed, #3b82f6)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '20px', marginLeft: '8px' }}>🎮</div>
       <div style={{ flex: 1 }}>
-        <div style={{
-          fontSize: '10px',
-          color: 'rgba(255,255,255,0.4)',
-          fontWeight: 600,
-          letterSpacing: '1px',
-          marginBottom: '2px'
-        }}>
-          SPONSORED
-        </div>
-        <div style={{
-          fontSize: '13px',
-          fontWeight: 700,
-          color: 'white',
-          marginBottom: '2px'
-        }}>
-          Level Up Your Game!
-        </div>
-        <div style={{
-          fontSize: '11px',
-          color: 'rgba(255,255,255,0.5)'
-        }}>
-          Get premium gaming gear at 30% off
-        </div>
+        <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '1px', marginBottom: '2px' }}>SPONSORED</div>
+        <div style={{ fontSize: '13px', fontWeight: 700, color: 'white', marginBottom: '2px' }}>Level Up Your Game!</div>
+        <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)' }}>Get premium gaming gear at 30% off</div>
       </div>
-
-      {/* CTA Button */}
-      <button style={{
-        background: 'linear-gradient(135deg, #7c3aed, #5b21b6)',
-        color: 'white',
-        border: 'none',
-        borderRadius: '20px',
-        padding: '7px 14px',
-        fontSize: '12px',
-        fontWeight: 700,
-        cursor: 'pointer',
-        flexShrink: 0,
-        boxShadow: '0 4px 12px rgba(124,59,237,0.4)'
-      }}>
-        Install
-      </button>
+      <button style={{ background: 'linear-gradient(135deg, #7c3aed, #5b21b6)', color: 'white', border: 'none', borderRadius: '20px', padding: '7px 14px', fontSize: '12px', fontWeight: 700, cursor: 'pointer', flexShrink: 0 }}>Install</button>
     </div>
   );
 }

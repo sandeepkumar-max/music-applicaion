@@ -1,48 +1,53 @@
-import { AdMob, InterstitialAdPluginEvents } from '@capacitor-community/admob';
 import { Capacitor } from '@capacitor/core';
 
 export const adManager = {
   interstitialId: 'ca-app-pub-3271133689051975/3390324552',
   nextSongCounter: 0,
+  admobLoaded: false,
 
-  initialize: async function() {
-    if (!Capacitor.isNativePlatform()) return;
-    
-    AdMob.addListener(InterstitialAdPluginEvents.Loaded, (info) => {
-      console.log('Interstitial Ad Loaded', info);
-    });
-    
-    AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
-      this.prepareInterstitial(); // Load next one
-    });
-
-    this.prepareInterstitial();
-  },
-
-  prepareInterstitial: async function() {
-    if (!Capacitor.isNativePlatform()) return;
+  initialize: async function () {
+    // Only initialize on real Android/iOS - skip in browser
+    if (!Capacitor.isNativePlatform()) {
+      console.log('AdManager: Browser mode - skipping native AdMob');
+      return;
+    }
     try {
-      await AdMob.prepareInterstitial({
-        adId: this.interstitialId,
+      const { AdMob, InterstitialAdPluginEvents } = await import('@capacitor-community/admob');
+
+      AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
+        this.prepareInterstitial();
       });
+
+      await this.prepareInterstitial();
+      this.admobLoaded = true;
     } catch (e) {
-      console.error('Error preparing interstitial', e);
+      console.warn('AdMob init failed (non-critical):', e);
     }
   },
 
-  showInterstitial: async function() {
+  prepareInterstitial: async function () {
     if (!Capacitor.isNativePlatform()) return;
     try {
+      const { AdMob } = await import('@capacitor-community/admob');
+      await AdMob.prepareInterstitial({ adId: this.interstitialId });
+    } catch (e) {
+      console.warn('Interstitial prep failed:', e);
+    }
+  },
+
+  showInterstitial: async function () {
+    if (!Capacitor.isNativePlatform()) return;
+    try {
+      const { AdMob } = await import('@capacitor-community/admob');
       await AdMob.showInterstitial();
     } catch (e) {
-      console.error('Error showing interstitial', e);
-      // Fallback: try to prepare again
+      console.warn('Interstitial show failed:', e);
       this.prepareInterstitial();
     }
   },
 
-  // Log song change and show ad every 5 songs
-  logSongChange: function() {
+  // Show ad every 5 song changes
+  logSongChange: function () {
     this.nextSongCounter++;
     if (this.nextSongCounter >= 5) {
       this.showInterstitial();

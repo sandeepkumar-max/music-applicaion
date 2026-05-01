@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { AdMob } from '@capacitor-community/admob';
 import { Capacitor } from '@capacitor/core';
 
 export default function NativeAd() {
