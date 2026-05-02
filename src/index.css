@@ -18,6 +18,9 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /* ✅ Remove blue tap highlight on Android/iOS WebView */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
 }
 
 body {
@@ -93,13 +96,26 @@ button {
   background: none;
   font-family: inherit;
   color: inherit;
+  outline: none;                        /* remove focus ring */
+  -webkit-tap-highlight-color: transparent; /* remove blue flash */
+  -webkit-appearance: none;
+  user-select: none;
 }
 
-input {
-  font-family: inherit;
+button:focus,
+button:focus-visible {
+  outline: none;
 }
 
 a {
   text-decoration: none;
   color: inherit;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+input {
+  font-family: inherit;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
 }

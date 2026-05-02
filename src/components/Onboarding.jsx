@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 
 const slides = [
@@ -49,7 +48,6 @@ const slides = [
 
 export default function Onboarding({ onDone }) {
   const [step, setStep] = useState(0);
-  const navigate = useNavigate();
 
   const isLast = step === slides.length - 1;
   const slide = slides[step];

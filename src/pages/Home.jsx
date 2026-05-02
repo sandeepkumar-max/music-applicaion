@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import { Play, Music2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useMusicStore } from '../store/useMusicStore';
 import NativeAd from '../components/NativeAd';
@@ -6,7 +6,7 @@ import '../App.css';
 
 export default function Home() {
   const navigate = useNavigate();
-  const { history, setCurrentSong, setPlayerOpen, userAvatar } = useMusicStore();
+  const { history, localSongs, setCurrentSong, setPlayerOpen, userAvatar } = useMusicStore();
 
   const handlePlaySong = (song) => {
     setCurrentSong(song);
@@ -71,10 +71,15 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Recently Played */}
       <div className="section-header">
         <h2 className="section-title">Recently Played</h2>
-        <a href="#" className="see-all">See all</a>
+        <button
+          onClick={() => navigate('/library')}
+          className="see-all"
+          style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+        >
+          See all
+        </button>
       </div>
 
       <div className="horizontal-scroll">
@@ -103,7 +108,13 @@ export default function Home() {
       {/* Made For You */}
       <div className="section-header">
         <h2 className="section-title">Made For You</h2>
-        <a href="#" className="see-all">See all</a>
+        <button
+          onClick={() => navigate('/search')}
+          className="see-all"
+          style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+        >
+          See all
+        </button>
       </div>
 
       <div className="horizontal-scroll">
@@ -120,6 +131,38 @@ export default function Home() {
           </div>
         ))}
       </div>
+
+      {/* ── Your Music (Phone Songs) ── */}
+      {localSongs.length > 0 && (
+        <>
+          <div className="section-header" style={{ marginTop: 32 }}>
+            <h2 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Music2 size={20} style={{ color: 'var(--primary)' }} /> Your Music
+            </h2>
+            <button
+              onClick={() => navigate('/library')}
+              className="see-all"
+              style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+            >
+              See all ({localSongs.length})
+            </button>
+          </div>
+          <div className="horizontal-scroll">
+            {localSongs.slice(0, 10).map((song) => (
+              <div key={song.id} className="music-card" onClick={() => handlePlaySong(song)}>
+                <div className="card-img-wrapper">
+                  <img src={song.img} alt={song.title} className="card-img" />
+                  <button className="card-play-btn">
+                    <Play size={24} fill="currentColor" style={{ marginLeft: '4px' }} />
+                  </button>
+                </div>
+                <div className="card-title">{song.title}</div>
+                <div className="card-subtitle">{song.artist}</div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

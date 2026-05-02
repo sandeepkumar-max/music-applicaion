@@ -1,7 +1,21 @@
 import { useEffect } from 'react';
-import { Capacitor } from '@capacitor/core';
 
 export default function PermissionsGate({ onReady }) {
+  const requestAllPermissions = async () => {
+    try {
+      // Notification permission (non-blocking)
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission(); // fire and forget, no await
+      }
+    } catch {
+      // ignore all errors
+    }
+
+    // On native Android - permissions handled by Capacitor automatically
+    // No blocking calls here
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // Always proceed after 1.5 seconds max - never block the user
     const fallbackTimer = setTimeout(() => {
@@ -13,20 +27,6 @@ export default function PermissionsGate({ onReady }) {
       onReady();
     });
   }, []);
-
-  async function requestAllPermissions() {
-    try {
-      // Notification permission (non-blocking)
-      if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission(); // fire and forget, no await
-      }
-    } catch (e) {
-      // ignore all errors
-    }
-
-    // On native Android - permissions handled by Capacitor automatically
-    // No blocking calls here
-  }
 
   return (
     <div style={{

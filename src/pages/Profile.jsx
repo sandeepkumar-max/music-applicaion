@@ -24,8 +24,13 @@ export default function Profile() {
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const url = URL.createObjectURL(file);
-    setUserAvatar(url);
+
+    // ✅ Convert to base64 — persists in localStorage, no blob expiry
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setUserAvatar(reader.result); // data:image/... URL — permanent
+    };
+    reader.readAsDataURL(file);
   };
 
   return (

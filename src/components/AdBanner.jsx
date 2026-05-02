@@ -2,13 +2,7 @@ import { useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
 
 export default function AdBanner() {
-  useEffect(() => {
-    if (Capacitor.isNativePlatform()) {
-      loadNativeBanner();
-    }
-  }, []);
-
-  async function loadNativeBanner() {
+  const loadNativeBanner = async () => {
     try {
       const { AdMob, BannerAdSize, BannerAdPosition } = await import('@capacitor-community/admob');
       await AdMob.showBanner({
@@ -20,7 +14,13 @@ export default function AdBanner() {
     } catch (e) {
       console.warn('Banner ad failed:', e);
     }
-  }
+  };
+
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) {
+      loadNativeBanner();
+    }
+  }, []);
 
   // Show beautiful gaming-themed placeholder in browser only
   if (Capacitor.isNativePlatform()) return null; // Native handles its own banner overlay

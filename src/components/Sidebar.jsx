@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Home, Search, Library, User, Music, Disc, ListMusic } from 'lucide-react';
+import { Home, Search, Library, User, Music } from 'lucide-react';
 import './Sidebar.css';
 
 export default function Sidebar() {
